@@ -36,13 +36,13 @@ from auth_injector import QoderAuthInjector
 PORT = int(os.environ.get("QODER_PORT", 8963))
 HOST = os.environ.get("QODER_HOST", "0.0.0.0")
 QODERCLI = os.environ.get("QODERCLI_BIN", "qodercli")
-MAX_RETRIES = 3
+MAX_RETRIES = 5
 TIMEOUT = int(os.environ.get("QODER_TIMEOUT", 300))
 STREAM_CHUNK_SIZE = int(os.environ.get("STREAM_CHUNK_SIZE", "3"))
 STREAM_DELAY = float(os.environ.get("STREAM_DELAY", "0.02"))
 PROACTIVE_LIMIT = int(os.environ.get("PROACTIVE_LIMIT", "190"))
 DAILY_LIMIT = 200
-MAX_SYSTEM_PROMPT = 15000
+MAX_SYSTEM_PROMPT = 14000
 
 MODEL_MAP = {
     "qwen3-max": "qmodel_latest",
@@ -366,6 +366,9 @@ def extract_messages(messages, tools=None):
     if tool_summary:
         system_prompt = f"{system_prompt}\n\n{tool_summary}" if system_prompt else tool_summary
 
+    if system_prompt and len(system_prompt) > 15500:
+        system_prompt = system_prompt[:15500] + "\n[...truncated...]"
+
     if len(conversation_parts) == 1:
         user_prompt = conversation_parts[0][1]
     else:
@@ -603,6 +606,13 @@ def do_realtime_streaming(prompt, model, image_paths, system_prompt, wfile, req_
             _send_error_chunk(wfile, req_id, created, model, err)
             return
 
+        if attempt > 0 or True:
+            sys_len = len(system_prompt) if system_prompt else 0
+            prompt_len = len(prompt) if prompt else 0
+            print(f"[proxy] attempt {attempt+1}/{MAX_RETRIES} | account {idx} | "
+                  f"sys_prompt={sys_len} chars | prompt={prompt_len} chars",
+                  file=sys.stderr, flush=True)
+
         final_usage = {}
         got_text = False
         needs_retry = False
@@ -649,6 +659,7 @@ def do_realtime_streaming(prompt, model, image_paths, system_prompt, wfile, req_
                     final_usage = event["usage"]
 
         if needs_retry:
+            time.sleep(1)
             continue
 
         done_chunk = {
