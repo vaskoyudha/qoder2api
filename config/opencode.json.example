@@ -1,0 +1,56 @@
+{
+  "qoder-cli": {
+    "npm": "@ai-sdk/openai-compatible",
+    "name": "Qoder CLI (115 accounts, 23K/day)",
+    "options": {
+      "baseURL": "http://127.0.0.1:8963/v1",
+      "apiKey": "not-needed",
+      "timeout": 300000,
+      "chunkTimeout": 120000
+    },
+    "models": {
+      "qoder-unlimited": {
+        "name": "Qoder Qwen3.7-Max Unlimited (115 accounts, 23K/day)",
+        "id": "qoder-unlimited",
+        "modalities": {
+          "input": ["text", "image"],
+          "output": ["text"]
+        },
+        "limit": { "context": 128000, "output": 32000 },
+        "options": { "reasoningEffort": "medium" },
+        "variants": {
+          "fast": { "reasoningEffort": "none" },
+          "standard": { "reasoningEffort": "medium" },
+          "thorough": { "reasoningEffort": "high" }
+        }
+      },
+      "qwen3.7-max": {
+        "name": "Qwen 3.7 Max",
+        "id": "qwen3.7-max",
+        "modalities": {
+          "input": ["text", "image"],
+          "output": ["text"]
+        },
+        "limit": { "context": 128000, "output": 32000 }
+      },
+      "qwen3-max": {
+        "name": "Qwen 3 Max",
+        "id": "qwen3-max",
+        "modalities": {
+          "input": ["text", "image"],
+          "output": ["text"]
+        },
+        "limit": { "context": 128000, "output": 32000 }
+      },
+      "lite": {
+        "name": "Qoder Lite (fast responses)",
+        "id": "lite",
+        "modalities": {
+          "input": ["text"],
+          "output": ["text"]
+        },
+        "limit": { "context": 32000, "output": 8000 }
+      }
+    }
+  }
+}

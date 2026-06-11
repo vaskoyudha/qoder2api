@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# State files
+rotation_state.json
+state.json
+
+# Tokens and credentials
+qoder_tokens.json
+accounts.txt
+accounts_new.txt
+config.env
+.env
+*.sqlite
+
+# Runtime directories
+/tmp/
+screenshots/
+debug/
+logs/
+dashboard/
+
+# OS
+.DS_Store
+Thumbs.db
